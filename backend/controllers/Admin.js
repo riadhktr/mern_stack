@@ -60,7 +60,7 @@ exports.deleteBooks=async(req,res)=>{
 exports.updateBook=async(req,res)=>{
     try{
         const{id}= req.params;
-        updated= await bookSchema.findByIdAndUpdate(id,{$set:{...req.body}},{new:true});
+       const updated= await bookSchema.findByIdAndUpdate(id,{$set:{...req.body}},{new:true});
         console.log(updated);
         res.status(200).json({message:'the updated book:',updated})
     }
@@ -126,6 +126,7 @@ exports.addToWish = asyncHandler(async (req, res) => {
         );
         res.json(rateProduct)
       }
+      
       const getallratings = await bookSchema.findById(prodId);
       let totalRating = getallratings.ratings.length;
       let ratingsum = getallratings.ratings

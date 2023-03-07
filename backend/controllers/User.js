@@ -55,7 +55,9 @@ exports.loginUserCtrl = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   // check if user exists or not
   const findUser = await User.findOne({ email });
-  if (findUser && (await findUser.isPasswordMatched(password))) {
+
+  if (findUser && (await findUser.isPasswordMatched(password)) ) {
+   if(findUser.isBlocked ===false){
     const refreshToken = await generateRefreshToken(findUser?._id);
     const updateuser = await User.findByIdAndUpdate(
       findUser.id,
@@ -65,9 +67,13 @@ exports.loginUserCtrl = asyncHandler(async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
      
       maxAge: 72 * 60 * 60 * 1000,
-    }); 
+    });
+   }else{
+    return  res.status(400).json({msg:"Account blocked"})
+   }
+     
   } else {
-    throw new Error("Invalid Credentials");
+ return  res.status(400).json({msg:"invalid credentials "})
 
   }
   res.json({
@@ -180,8 +186,7 @@ exports.deleteaUser = asyncHandler(async (req, res) => {
 
   try {
     const deleteaUser = await User.findByIdAndDelete(id);
-    res.json({
-      deleteaUser,
+    res.status(200).json({msg:"user removed with sucess", deleteaUser
     });
   } catch (error) {
     throw new Error(error);

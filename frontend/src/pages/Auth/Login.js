@@ -12,10 +12,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import {toast,ToastContainer} from 'react-toastify';
-import { base_url } from '../../utils/baseUrl';
 import { isAuthenticated, setAuthentification } from '../../helpers/auth';
 
 function Copyright(props) {
@@ -59,7 +58,9 @@ export default function Login() {
       })
     }
     catch(err){
-      console.log(err);
+      const error = err.response.data.msg
+      generateError(error)
+      console.log('errror',err);
     }
   }
   return (
@@ -119,12 +120,12 @@ export default function Login() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link  variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="http://localhost:5008/users/register" variant="body2">
+                <Link as ={Link} to='/register' variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

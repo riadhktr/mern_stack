@@ -29,7 +29,7 @@ userRouter.delete("/empty-cart", authMiddleware, emptyCart);
 userRouter.delete("/:id", deleteaUser);
 userRouter.put("/edit-user", authMiddleware, updatedUser);
 userRouter.put("/save-address", authMiddleware, saveAddress);
-userRouter.put("/block-user/:id", authMiddleware, isAdmin, blockUser);
-userRouter.put("/unblock-user/:id", authMiddleware, isAdmin, unblockUser);
+userRouter.put("/block-user/:id", blockUser);
+userRouter.put("/unblock-user/:id", unblockUser);
 
 module.exports = userRouter;

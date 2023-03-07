@@ -26,6 +26,9 @@ import BookPdf from './pages/BokkPdf';
 import Admin from './pages/AdminDashboard/Admin';
 import AdminRoute from './privateRoutes/AdminRoute';
 import UserRoute from './privateRoutes/UserRoute';
+import List from './pages/AdminDashboard/List';
+import AddBooks from './pages/AdminDashboard/AddBooks';
+import UpdateBook from './pages/AdminDashboard/UpdateBook';
 
 
 function App() {
@@ -40,6 +43,9 @@ function App() {
       {/*admin private route */}
       <Route element={<AdminRoute/>}>
       <Route path='/admin' element={<Admin/>}/>
+      <Route path='/list' element={<List/>}/>
+      <Route path='/newBook' element={<AddBooks/>}/>
+      <Route path='/updateBook/:id' element={<UpdateBook/>}/>
       </Route>
      {/*user private route */}
      <Route element={<UserRoute/>}>

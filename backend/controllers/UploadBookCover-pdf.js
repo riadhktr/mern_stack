@@ -17,7 +17,7 @@ const upload= multer({
  });
 
 exports.multipleUpload= upload.fields([
-  {name:"picture",maxCount:1},
-  {name:"pdf",maxCount:1}
+  {name:"bookImage",maxCount:1},
+  {name:"bookPdf",maxCount:1}
 ])
 
