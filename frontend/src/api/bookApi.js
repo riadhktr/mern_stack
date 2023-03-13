@@ -31,8 +31,8 @@ export const removeBook =async(id)=>{
         }
     }
   
-     await axios.delete(`http://localhost:5008/admin/delete/${id}`,config)
-    
+    const {data}= await axios.delete(`http://localhost:5008/admin/delete/${id}`,config)
+    return data
   }
 
   export const updateBook =async(newBook,id)=>{

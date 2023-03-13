@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate} from 'react-router-dom';
 import axios from 'axios';
-import {toast,ToastContainer} from 'react-toastify';
+import {toast} from 'react-toastify';
 import { isAuthenticated, setAuthentification } from '../../helpers/auth';
 
 function Copyright(props) {
@@ -36,7 +36,7 @@ export default function Login() {
   console.log(value);
   const navigate=useNavigate();
   const generateError=(error)=>{
-    toast.error(error,{position:"top-center"})
+    toast.error(error,{position:"top-right"})
   }
   const handleSubmit = async(event) => {
     event.preventDefault();
@@ -134,7 +134,7 @@ export default function Login() {
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>            
-    <ToastContainer/>
+   
     </ThemeProvider>
   );
 }

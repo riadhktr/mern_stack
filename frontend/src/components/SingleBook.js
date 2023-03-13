@@ -14,10 +14,12 @@ import Collapse from '@mui/material/Collapse';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {grey } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
-
+import { useDispatch } from 'react-redux';
 import BasicRating from './Rating';
 import { useNavigate } from 'react-router-dom';
 import {  removeBook } from '../api/bookApi';
+import { deleteBook } from '../store/bookSlice';
+import {toast} from 'react-toastify';
 
 
 
@@ -35,7 +37,13 @@ const ExpandMore = styled((props) => {
 
 
 export default function SingleBookCard({book}) {
+  
   const [expanded, setExpanded] = React.useState(false);
+  const dispatch = useDispatch()
+
+  const generateSucess=(msg)=>{
+    toast.success(msg,{position:"top-right"})
+  }
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -44,7 +52,14 @@ export default function SingleBookCard({book}) {
     const navigate = useNavigate();
 
     const handelRemove = async()=>{
-    await removeBook(book._id)
+    dispatch(deleteBook(book._id))
+    await removeBook(book._id).then((response)=>{
+      
+      generateSucess('book removed with sucess')
+    }).catch((err)=>{
+      console.log(err);
+    })
+    
     }
 
   return (
@@ -106,6 +121,7 @@ export default function SingleBookCard({book}) {
                   </CardContent>
       </Collapse>
     </Card>
+ 
     </div>
   );
 }

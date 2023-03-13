@@ -160,7 +160,7 @@ exports.saveAddress = asyncHandler(async (req, res, next) => {
 //Get all users
 exports.getallUser = asyncHandler(async (req, res) => {
   try {
-    const getUsers = await User.find()   ///.populate("wishlist");
+    const getUsers = await User.find().populate("cart");
     res.json(getUsers);
   } catch (error) {
     throw new Error(error);
@@ -168,10 +168,10 @@ exports.getallUser = asyncHandler(async (req, res) => {
 });
 //Get a single user
 exports.getaUser = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+  const { _id } = req.user;
   // validateMongoDbId(id);
   try {
-    const getaUser = await User.findById(id);
+    const getaUser = await User.findById(_id);
     res.json({
       getaUser,
     });
@@ -299,7 +299,7 @@ exports.userCart = asyncHandler(async (req, res) => {
     for (let i= 0; i< cart.length; i++) {
       let object = {};
       object.product = cart[i]._id;
-      object.count = cart[i].count;
+      object.bookQuantity = cart[i].bookQuantity;
       let getPrice = await Book.findById(cart[i]._id).select("bookPrice").exec();
       object.bookPrice = getPrice.bookPrice;
       products.push(object);
@@ -307,14 +307,16 @@ exports.userCart = asyncHandler(async (req, res) => {
     console.log(products);
     let cartTotal = 0;
     for (let i= 0; i< products.length; i++) {
-      cartTotal = cartTotal + products[i].bookPrice * products[i].count;
+      cartTotal = cartTotal + products[i].bookPrice * products[i].bookQuantity;
     }
     let newCart = await new Cart({
       products,
       cartTotal,
       orderby: user?._id,
     }).save();
-    res.json(newCart);
+    const updatedCart = await User.findByIdAndUpdate(_id,{$push:{cart:newCart}})
+      // updatedCart.cart.push(newCart).save()
+    res.json({newCart, updatedCart});
   } catch (error) {
     throw new Error(error);
   }

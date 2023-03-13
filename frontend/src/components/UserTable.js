@@ -1,4 +1,4 @@
-import  React,{ useState} from 'react';
+import  React from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,7 +9,9 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Button } from '@mui/material';
 import { blockUser, deleteUser, unblockUser } from '../api/AdminApi';
-import {toast,ToastContainer} from 'react-toastify';
+import {toast} from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeStatus, RemoveUser } from '../store/userSlice';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -33,22 +35,24 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 
-export default function UserTables({user}) {
-
-  const [status, setStatus] = useState(false);
-  console.log('status ==>',status)
+export default function UserTables() {
+  const user = useSelector((state)=>state.Users)
+  const dispatch = useDispatch()
+  
   const generateError=(error)=>{
-    toast.error(error,{position:"top-right"})
+    toast.warning(error,{position:"top-right"})
   }
   const generateSucess=(msg)=>{
     toast.success(msg,{position:"top-right"})
   }
   const handleBlock = async(Id)=>{
-    
-    if(status){
+   const status = dispatch(changeStatus(Id))
+   console.log(status);
+   const users = user.find((el)=>{
+   return el._id === Id
+   })
+    if(users.isBlocked){
       await unblockUser(Id).then((response)=>{
-        
-        setStatus(!status)
         generateSucess(response.message)
       }).catch((err)=>{
         console.log(err);
@@ -56,8 +60,8 @@ export default function UserTables({user}) {
     }else{
       
       await blockUser(Id).then((response)=>{
-        setStatus(!status)
-        console.log(response);
+        generateError(response.message)
+        
       }).catch((err)=>{
         console.log(err);
       })
@@ -68,10 +72,13 @@ export default function UserTables({user}) {
 
   // remove user 
   const handelRemove = async(ID)=>{
+    dispatch(RemoveUser(ID));
     await deleteUser(ID).then((response)=>{
       generateSucess(response.msg)
+     
+      
     }).catch((err)=>{
-      generateSucess("failed to remove this user")
+      generateError("failed to remove this user")
     })
 
   }
@@ -112,7 +119,7 @@ export default function UserTables({user}) {
         </TableBody>
       </Table>
     </TableContainer>
-    <ToastContainer/>
+    
     </div>
   );
 }

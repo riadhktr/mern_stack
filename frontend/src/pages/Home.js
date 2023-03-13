@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { setBooks } from '../store/bookSlice';
 import BookCard from '../components/BookCard';
+import NavbarUser from '../components/NavbarUser';
+
 
 const Home = () => {
   const books = useSelector((state)=>state.Book);
@@ -22,19 +24,25 @@ const Home = () => {
     getAllBooks()
   },[])
   return (
-    <div> 
-      <h1>welcome to Home page</h1>
-      <div>
-        {books.map((el,index)=>{
-          return (
-            <div key={index}>
-              <BookCard element={el}/>
-
-            </div>
-          )
-        })}
-      </div>
+    <>
+    <NavbarUser/>
+    <div style={{
+      display: "flex",
+     
+      flexWrap: "wrap",
+      justifyContent: "space-around",
+      alignItems: "center"
+      }}>
+        {/* <Panier/> */}
+      {books.map((element,index)=>{
+        return (
+          <div key={index}>
+            <BookCard element={element}/>
+          </div>
+        )
+      })}       
     </div>
+    </>
   )
 }
 

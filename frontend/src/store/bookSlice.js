@@ -8,10 +8,14 @@ const bookSlice = createSlice({
         setBooks:(state,action)=>{
             return action.payload
         },
+        deleteBook :(state,action)=>{
+            state=state.filter((el)=>el._id !== action.payload)
+            return state
+        }
         
     }
 })
 
 
-export const {setBooks} = bookSlice.actions;
+export const {setBooks,deleteBook} = bookSlice.actions;
 export default bookSlice.reducer

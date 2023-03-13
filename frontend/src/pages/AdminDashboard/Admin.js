@@ -15,6 +15,7 @@ const Admin = () => {
   const listOfBooks = async()=>{
     await getAllBooks().then((response)=>{
       dispatch(setBooks(response.bookList))
+      
 // console.log(response.bookList);
     }).catch((err)=>{
       console.log(err);

@@ -95,51 +95,51 @@ exports.addToWish = asyncHandler(async (req, res) => {
     }
   })
 //rate & comment a book
- exports.rating = asyncHandler(async (req, res) => {
-    const { _id } = req.user;
-    const { star, prodId, comment } = req.body;
-    try {
-      const product = await bookSchema.findById(prodId);
-      let alreadyRated = product.ratings.find(
-        (userId) => userId.postedby.toString() === _id.toString()
+exports.rating = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { star, prodId, comment } = req.body;
+  try {
+    const product = await bookSchema.findById(prodId);
+    let alreadyRated = product.ratings.find(
+      (userId) => userId.postedby.toString() === _id.toString()
+    );
+    if (alreadyRated) {
+      const updateRating = await bookSchema.updateOne(
+        {ratings: { $elemMatch: alreadyRated }},
+        {$set: { "ratings.$.star": star, "ratings.$.comment": comment }},
+        {new: true}
       );
-      if (alreadyRated) {
-        const updateRating = await bookSchema.updateOne(
-          {ratings: { $elemMatch: alreadyRated }},
-          {$set: { "ratings.$.star": star, "ratings.$.comment": comment }},
-          {new: true}
-        );
-        res.json(updateRating)
-      } else {
-        const rateProduct = await bookSchema.findByIdAndUpdate(
-          prodId,
-          {
-            $push: {
-              ratings: {
-                star: star,
-                comment: comment,
-                postedby: _id,
-              },
+      // res.json(updateRating)
+    } else {
+      const rateProduct = await bookSchema.findByIdAndUpdate(
+        prodId,
+        {
+          $push: {
+            ratings: {
+              star: star,
+              comment: comment,
+              postedby: _id,
             },
           },
-          {new: true}
-        );
-        res.json(rateProduct)
-      }
-      
-      const getallratings = await bookSchema.findById(prodId);
-      let totalRating = getallratings.ratings.length;
-      let ratingsum = getallratings.ratings
-        .map((item) => item.star)
-        .reduce((prev, curr) => prev + curr, 0);
-      let actualRating = Math.round(ratingsum / totalRating);
-      let finalproduct = await bookSchema.findByIdAndUpdate(
-        prodId,
-        {totalrating: actualRating,},
-        { new: true }
+        },
+        {new: true}
       );
-      res.json(finalproduct);
-    } catch (error) {
-      throw new Error(error);
+      res.json(rateProduct)
     }
-  });
+    
+    const getallratings = await bookSchema.findById(prodId);
+    let totalRating = getallratings.ratings.length;
+    let ratingsum = getallratings.ratings
+      .map((item) => item.star)
+      .reduce((prev, curr) => prev + curr, 0);
+    let actualRating = Math.round(ratingsum / totalRating);
+    let finalproduct = await bookSchema.findByIdAndUpdate(
+      prodId,
+      {totalrating: actualRating,},
+      { new: true }
+    );
+   return res.json(finalproduct);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
