@@ -13,6 +13,8 @@ import AddBooks from './pages/AdminDashboard/AddBooks';
 import UpdateBook from './pages/AdminDashboard/UpdateBook';
 import BookPdf from './pages/UserDashboard/BokkPdf';
 import Orders from './pages/UserDashboard/Orders';
+import OrdersList from './pages/AdminDashboard/OrdersList';
+import OrderDetail from './pages/AdminDashboard/OrderDetail';
 
 
 
@@ -32,6 +34,9 @@ function App() {
       <Route path='/list' element={<List/>}/>
       <Route path='/newBook' element={<AddBooks/>}/>
       <Route path='/updateBook/:id' element={<UpdateBook/>}/>
+      <Route path='/orderList' element={<OrdersList/>}/>
+      <Route path='/orderDetail/:id' element={<OrderDetail/>}/>
+      
       </Route>
      {/*user private route */}
      <Route element={<UserRoute/>}>

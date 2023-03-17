@@ -8,7 +8,8 @@ import BookCard from '../../components/BookCard'
 
 const UserProfile = () => {
   const books = useSelector((state)=>state.Book);
-  console.log('books:',books);
+  // console.log('books:',books);
+ 
  
   const dispatch = useDispatch();
   const getAllBooks = async()=>{
@@ -38,7 +39,7 @@ const UserProfile = () => {
         {books.map((element,index)=>{
           return (
             <div key={index}>
-              <BookCard element={element}/>
+              <BookCard element={element} />
             </div>
           )
         })}       

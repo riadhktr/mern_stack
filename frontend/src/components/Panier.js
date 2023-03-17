@@ -16,7 +16,7 @@ import { getCartTotal, removeAllItems} from "../store/cartSlice";
 import { useDispatch, useSelector } from 'react-redux';
 import BookAtBag from './BookAtBag';
 import { Button } from '@mui/material';
-import { createCart } from '../api/UserApi';
+import { createCart, createOrder, emptyCart } from '../api/UserApi';
 import { getCookie } from '../helpers/cookies';
 import { toast } from 'react-toastify';
 
@@ -82,13 +82,24 @@ const dispatch = useDispatch()
   toast.error(error,{position:"bottom-right"})
  }
 
+ const RemoveCart = async()=>{
+  await emptyCart().then((response)=>{
+    console.log(response);
+  }).catch((err)=>{
+    console.log(err);
+  })
+ }
 // req cart for a user 
   const handleCart = async()=>{
     if(token){
       await createCart({cart})
+      await  createOrder({COD:true,couponApplied:true})
     .then((response)=>{
       console.log(response);
+      RemoveCart()
       dispatch(removeAllItems())
+     
+
       console.log('caaart',cart);
     }).catch((err)=>{
       console.log(err);
@@ -182,7 +193,7 @@ const dispatch = useDispatch()
         TotalQuantity :{totalQuantity}  
         </div>  
         <div style={{textAlign:"center"}}>
-            TotalPrice:<strong> {totalPrice} TND</strong>
+        TotalPrice:<strong> {totalPrice} TND</strong>
         </div>
         <Button onClick={()=>handleCart()}> checkout</Button>
         </div>

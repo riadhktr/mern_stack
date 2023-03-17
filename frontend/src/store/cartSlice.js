@@ -13,8 +13,8 @@ const initialState = {
     reducers: {
       addToCart: (state, action) => {
         let find = state.cart.findIndex((item) => item._id === action.payload._id);
-        if (find >= 0) {
-          state.cart[find].bookQuantity += 1;
+        if (find >= 0 ) {
+          state.cart[find].count += 1;
         } else {
           state.cart.push(action.payload);
         }
@@ -28,11 +28,11 @@ const initialState = {
           (cartTotal, cartItem) => {
             // console.log("carttotal", cartTotal);
             // console.log("cartitem", cartItem);
-            const { bookPrice, bookQuantity } = cartItem;
+            const { bookPrice, count } = cartItem;
             // console.log(price, quantity);
-            const itemTotal = bookPrice * bookQuantity;
+            const itemTotal = bookPrice * count;
             cartTotal.totalPrice += itemTotal;
-            cartTotal.totalQuantity += bookQuantity;
+            cartTotal.totalQuantity += count;
             return cartTotal;
           },
           {
@@ -53,7 +53,10 @@ const initialState = {
       increaseItemQuantity: (state, action) => {
         state.cart = state.cart.map((item) => {
           if (item._id === action.payload) {
-            return { ...item, bookQuantity: item.bookQuantity + 1 };
+            if(item.count <= item.bookQuantity){
+              return { ...item, count: item.count + 1 };
+            }
+           
           }
           return item;
         });
@@ -61,7 +64,7 @@ const initialState = {
       decreaseItemQuantity: (state, action) => {
         state.cart = state.cart.map((item) => {
           if (item._id === action.payload) {
-            return {  ...item, bookQuantity: item.bookQuantity - 1  };
+            return {  ...item, count: item.count - 1  };
           }
           return item;
         });

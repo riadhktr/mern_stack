@@ -8,6 +8,10 @@ const bookSchema= new mongoose.Schema({
     bookImage: String,
     bookDescription: String,
     bookPdf: String,
+    count:{
+      type: Number,
+      default:1
+    },
     ratings: [
       {
         star: Number,

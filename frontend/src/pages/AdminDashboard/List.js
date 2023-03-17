@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
-import SideBar from '../../components/SideBar'
+import SideBar from '../../components/Admin/SideBar'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import {  setUsers } from '../../store/userSlice'
-import UserTables from '../../components/UserTable'
-import InfoCard from '../../components/UserInfo'
-import BlockedUserCard from '../../components/BlockedUser'
+import UserTables from '../../components/Admin/UserTable'
+import BlockedUserCard from '../../components/Admin/BlockedUser'
+import InfoCard from '../../components/Admin/UserInfo'
 
 const List = () => {
 const users = useSelector((state)=>state.Users)

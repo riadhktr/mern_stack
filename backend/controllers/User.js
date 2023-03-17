@@ -296,10 +296,11 @@ exports.userCart = asyncHandler(async (req, res) => {
     if (alreadyExistCart) {
       alreadyExistCart.remove();
     }
+
     for (let i= 0; i< cart.length; i++) {
       let object = {};
       object.product = cart[i]._id;
-      object.bookQuantity = cart[i].bookQuantity;
+      object.count = cart[i].count;
       let getPrice = await Book.findById(cart[i]._id).select("bookPrice").exec();
       object.bookPrice = getPrice.bookPrice;
       products.push(object);
@@ -307,16 +308,16 @@ exports.userCart = asyncHandler(async (req, res) => {
     console.log(products);
     let cartTotal = 0;
     for (let i= 0; i< products.length; i++) {
-      cartTotal = cartTotal + products[i].bookPrice * products[i].bookQuantity;
+      cartTotal = cartTotal + products[i].bookPrice * products[i].count;
     }
     let newCart = await new Cart({
       products,
       cartTotal,
       orderby: user?._id,
     }).save();
-    const updatedCart = await User.findByIdAndUpdate(_id,{$push:{cart:newCart}})
-      // updatedCart.cart.push(newCart).save()
-    res.json({newCart, updatedCart});
+    // const updatedCart = await User.findByIdAndUpdate(_id,{$push:{cart:newCart}})
+    //   // updatedCart.cart.push(newCart).save()
+    res.json({newCart});
   } catch (error) {
     throw new Error(error);
   }
@@ -325,7 +326,9 @@ exports.userCart = asyncHandler(async (req, res) => {
 exports.getUserCart = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   try {
-    const cart = await Cart.findOne({ orderby: _id }).populate("products.product");
+    const cart = await Cart.findOne({ orderby: _id })
+    .populate("products.product")
+    .populate("orderby");
     res.json(cart);
   } catch (error) {
     throw new Error(error);
@@ -335,8 +338,9 @@ exports.getUserCart = asyncHandler(async (req, res) => {
 exports.emptyCart = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   try {
-    const user = await User.findOne({ _id });
-    const cart = await Cart.findOneAndRemove({ orderby: user._id });
+    // const user = await User.findOne({ _id });
+    const cart = await Cart.findOne({orderby: _id}).deleteOne()
+    
     res.json(cart);
   } catch (error) {
     throw new Error(error);
@@ -385,7 +389,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
         currency: "DT",
       },
       orderby: user._id,
-      orderStatus: "Cash on Delivery",
+      // orderStatus: "Cash on Delivery",
     }).save();
     res.json(newOrder)
     let update = userCart.products.map((item) => {
@@ -406,11 +410,11 @@ exports.createOrder = asyncHandler(async (req, res) => {
 exports.getOrders = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   try {
-    const userorders = await Order.findOne({ orderby: _id })
-      .populate("products.product")
-      .populate("orderby")
-      .exec();
-    res.json(userorders);
+    const userorders = await Order.find({ orderby: _id })
+    .populate("products.product")
+    .populate("orderby")
+    .exec();
+    res.json({msg:"orderby_id",userorders});
   } catch (error) {
     throw new Error(error);
   }
@@ -421,13 +425,11 @@ exports.updateOrderStatus = asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
     const updateOrderStatus = await Order.findByIdAndUpdate(
-      id,
-      {
+      id,{$set:{
         orderStatus: status,
-        paymentIntent: {
-          status: status,
-        },
-      },
+        'paymentIntent.status': status
+        
+      }},
       { new: true }
     );
     res.json(updateOrderStatus);
@@ -451,7 +453,7 @@ exports.getAllOrders = asyncHandler(async (req, res) => {
 exports.getOrderByUserId = asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
-    const userorders = await Order.findOne({ orderby: id })
+    const userorders = await Order.findOne({ _id: id })
       .populate("products.product")
       .populate("orderby")
       .exec();
@@ -460,3 +462,5 @@ exports.getOrderByUserId = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
+
+

@@ -2,14 +2,14 @@ import Card from 'react-bootstrap/Card';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import { getCookie } from '../helpers/cookies';
 import axios from "axios"
 import {toast} from 'react-toastify';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import Tooltip from '@mui/material/Tooltip';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart, setItems } from '../store/cartSlice';
+import { addToCart } from '../store/cartSlice';
 
 
 
@@ -17,9 +17,7 @@ import { addToCart, setItems } from '../store/cartSlice';
 function BookCard({element}) {
   const items = useSelector((state) => state.allCart.cart);
   console.log('cart',items);
-//   const books = useSelector((state) => state.Book);
-//   console.log('books',books);
-// console.log(items);
+
   const dispatch = useDispatch();
     const navigate = useNavigate()
 
@@ -61,9 +59,7 @@ function BookCard({element}) {
     })
     
    }
-// useEffect(()=>{
-// dispatch(setItems(books))
-// },[])
+
    
   
   return (

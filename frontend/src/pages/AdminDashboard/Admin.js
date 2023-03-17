@@ -2,9 +2,8 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllBooks } from '../../api/bookApi'
-
-import SideBar from '../../components/SideBar'
-import SingleBookCard from '../../components/SingleBook'
+import SideBar from '../../components/Admin/SideBar'
+import SingleBookCard from '../../components/Admin/SingleBook'
 import { setBooks } from '../../store/bookSlice'
 
 const Admin = () => {

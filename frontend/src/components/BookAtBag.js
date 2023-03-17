@@ -38,7 +38,7 @@ export default function BookAtBag({book}) {
           </IconButton>
           
           <Typography component="div" variant="h5">
-          {book.bookQuantity}         
+          {book.count}         
            </Typography>
          
         

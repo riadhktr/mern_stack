@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import SideBar from '../../components/SideBar'
+import SideBar from '../../components/Admin/SideBar'
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -19,9 +19,9 @@ const UpdateBook = () => {
     bookPrice:"",
     bookDescription:""
   })
-  console.log(newBook);
+  // console.log(newBook);
 const Id = useParams()
-console.log('idd',Id.id);
+// console.log('idd',Id.id);
   const navigate = useNavigate()
   const handleChange =(e)=>{
 setNewBook({...newBook,[e.target.name]:e.target.value})

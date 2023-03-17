@@ -3,7 +3,7 @@ import { getCookie } from '../helpers/cookies';
 
 export const createBook =async(newBook)=>{
     const token=getCookie('refreshToken');
-  console.log('token',token);
+ 
     const config = {
         headers:{
             'Content-Type': 'multipart/form-data',
@@ -37,7 +37,7 @@ export const removeBook =async(id)=>{
 
   export const updateBook =async(newBook,id)=>{
     const token=getCookie('refreshToken');
-//   console.log('token',token);
+
     const config = {
         headers:{
             'Content-Type': 'multipart/form-data',

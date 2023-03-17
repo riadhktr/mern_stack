@@ -1,31 +1,46 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { Button } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { removeOrder } from '../store/OrderSlice';
 
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-  >
-    •
-  </Box>
-);
 
-export default function OrderDetail({detail}) {
+
+
+export default function OrderDetail({orders}) {
+  const dispatch = useDispatch();
+
+  const handleRemoveOrder =(Id)=>{
+   dispatch(removeOrder(Id))
+  }
     
     return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
+      <Typography variant="h5" component="div">
+         {orders.orderby.name}
+        </Typography>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          {detail.createdAt}
+          {(orders) ? `${orders.updatedAt.split('').splice(0,10).join("")}`: null}
         </Typography>
         <Typography variant="h5" component="div">
-          {detail.cartTotal} <strong>TND</strong>
+         {orders.orderStatus}
         </Typography>
-       <Button variant='outlined'>Payement</Button>
+        <Typography variant="h5" component="div">
+         {orders.products.map((el,index)=>{
+          return (
+          <div key={index}>
+            {el.product.bookName} 
+            <span>{el.count}</span>
+          </div> )
+         })}
+        </Typography>
+        <Typography variant="h5" component="div">
+         {orders.paymentIntent.amount} DT
+        </Typography>
+       <Button onClick={()=>handleRemoveOrder(orders._id)} variant='outlined'>Payement</Button>
       </CardContent>
       
     </Card>

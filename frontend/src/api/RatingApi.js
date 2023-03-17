@@ -4,7 +4,7 @@ import { getCookie } from '../helpers/cookies';
 
 export const RateBook =async(rate)=>{
     const token=getCookie('refreshToken');
-  console.log('token',token);
+
     const config = {
         headers:{
             
